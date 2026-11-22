@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>민준호의 iPhone - 라이어</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    body {
+      background: var(--pickle-surface-page, #0f1115);
+      color: var(--pickle-text-primary, #ffffff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 10px;
+      overflow: hidden;
+    }
+
+    /* iPhone Frame */
+    .iphone-frame {
+      width: 100%;
+      max-width: 380px;
+      height: 720px;
+      background: #000;
+      border-radius: 46px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.8), inset 0 0 0 3px #2d3139, inset 0 0 0 7px #121418;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Status Bar */
+    .status-bar {
+      height: 44px;
+      padding: 12px 24px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 600;
+      z-index: 100;
+      color: #fff;
+    }
+    .dynamic-island {
+      width: 100px;
+      height: 25px;
+      background: #000;
+      border-radius: 20px;
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 101;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+    }
+    .island-camera {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #111;
+      box-shadow: inset 0 0 2px #0a2540;
+    }
+    .island-sensor {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #080808;
+    }
+
+    /* Home Indicator */
+    .home-indicator-bar {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 130px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 2px;
+      z-index: 100;
+      cursor: pointer;
+    }
+
+    /* Screen Views Container */
+    .screen-view {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow-y: auto;
+      display: none;
+      flex-direction: column;
+    }
+    .screen-view.active {
+      display: flex;
+    }
+
+    /* ==========================================================
+       1. LOCK SCREEN
+       ========================================================== */
+    .view-lock {
+      background: linear-gradient(180deg, #09131e 0%, #050b12 50%, #020406 100%);
+      color: #fff;
+      padding: 30px 20px 20px;
+      align-items: center;
+      text-align: center;
+    }
+    .lock-date {
+      font-size: 15px;
+      font-weight: 500;
+      opacity: 0.85;
+      margin-top: 10px;
+    }
+    .lock-clock {
+      font-size: 64px;
+      font-weight: 300;
+      letter-spacing: -2px;
+      line-height: 1.1;
+      margin-bottom: 25px;
+    }
+    .lock-notifications {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      text-align: left;
+      margin-bottom: auto;
+    }
+    .notif-card {
+      background: rgba(30, 36, 48, 0.7);
+      backdrop-filter: blur(20px);
+      border-radius: 16px;
+      padding: 12px 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+    .notif-card:active {
+      transform: scale(0.98);
+    }
+    .notif-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: #a0aec0;
+      margin-bottom: 4px;
+    }
+    .notif-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: bold;
+    }
+    .notif-icon.kakao { background: #fee500; color: #3c1e1e; }
+    .notif-icon.msg { background: #34c759; color: #fff; }
+    .notif-icon.hosp { background: #007aff; color: #fff; }
+    .notif-title { font-size: 13px; font-weight: 600; color: #fff; }
+    .notif-body { font-size: 12px; color: #e2e8f0; line-height: 1.35; margin-top: 2px; }
+    
+    .unlock-btn {
+      width: 100%;
+      padding: 14px;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 25px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 25px;
+    }
+
+    /* ==========================================================
+       2. HOME SCREEN
+       ========================================================== */
+    .view-home {
+      background: linear-gradient(180deg, #0e1e2d 0%, #152230 40%, #080d14 100%);
+      padding: 15px 20px 20px;
+    }
+    .widget-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .home-widget {
+      background: rgba(26, 36, 48, 0.7);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 110px;
+    }
+    .widget-tag { font-size: 11px; color: #94a3b8; font-weight: 600; text-transform: uppercase; }
+    .widget-val { font-size: 20px; font-weight: 700; color: #fff; }
+    .widget-sub { font-size: 11px; color: #ef4444; }
+
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px 12px;
+      text-align: center;
+      margin-bottom: auto;
+    }
+    .app-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+    .app-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      font-size: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: transform 0.15s;
+    }
+    .app-item:active .app-icon { transform: scale(0.92); }
+    .app-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: #ff3b30;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 10px;
+      border: 2px solid #000;
+    }
+    .app-name {
+      font-size: 11px;
+      font-weight: 500;
+      color: #e2e8f0;
+      letter-spacing: -0.2px;
+    }
+
+    .app-icon.kakao { background: #fee500; color: #3c1e1e; font-size: 26px; }
+    .app-icon.messages { background: #34c759; color: #fff; }
+    .app-icon.instagram {
+      background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aeb 90%);
+      color: #fff;
+    }
+    .app-icon.notes { background: #ffcc00; color: #333; }
+    .app-icon.photos { background: #ffffff; color: #333; }
+    .app-icon.hospital { background: #0284c7; color: #fff; font-size: 20px; font-weight: bold; }
+    .app-icon.phone { background: #30d158; color: #fff; }
+    .app-icon.safari { background: #007aff; color: #fff; }
+
+    .dock-container {
+      background: rgba(30, 41, 59, 0.6);
+      backdrop-filter: blur(25px);
+      border-radius: 28px;
+      padding: 12px 14px;
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* Common App Header */
+    .app-header {
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-size: 15px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .header-back {
+      background: none;
+      border: none;
+      color: #38bdf8;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ==========================================================
+       3. KAKAOTALK APP
+       ========================================================== */
+    .view-kakaotalk {
+      background: #191919;
+      color: #fff;
+    }
+    .view-kakaotalk .app-header {
+      background: #191919;
+      color: #fff;
+    }
+    .chat-list {
+      flex: 1;
+      overflow-y: auto;
+    }
+    .chat-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      cursor: pointer;
+    }
+    .chat-row:hover, .chat-row:active {
+      background: rgba(255,255,255,0.03);
+    }
+    .chat-avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 18px;
+      background: #2a2e37;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .chat-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .chat-top-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+    .chat-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+    .chat-time {
+      font-size: 11px;
+      color: #64748b;
+    }
+    .chat-preview {
+      font-size: 12px;
+      color: #94a3b8;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .chat-unread-badge {
+      background: #ef4444;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 10px;
+    }
+
+    /* Kakao Chat Room */
+    .view-kakao-chat {
+      background: #abc1d1;
+      color: #000;
+      display: none;
+      flex-direction: column;
+    }
+    .view-kakao-chat .app-header {
+      background: #9bb3c4;
+      color: #000;
+      border-bottom: none;
+    }
+    .kakao-messages-body {
+      flex: 1;
+      padding: 14px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .msg-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-width: 78%;
+    }
+    .msg-group.incoming {
+      align-self: flex-start;
+    }
+    .msg-group.outgoing {
+      align-self: flex-end;
+      align-items: flex-end;
+    }
+    .msg-sender {
+      font-size: 11px;
+      color: #4b5563;
+      margin-bottom: 2px;
+    }
+    .bubble-wrap {
+      display: flex;
+      align-items: flex-end;
+      gap: 5px;
+    }
+    .msg-group.outgoing .bubble-wrap {
+      flex-direction: row-reverse;
+    }
+    .k-bubble {
+      padding: 9px 12px;
+      border-radius: 14px;
+      font-size: 13px;
+      line-height: 1.4;
+      word-break: break-all;
+    }
+    .msg-group.incoming .k-bubble {
+      background: #ffffff;
+      color: #111;
+      border-top-left-radius: 2px;
+    }
+    .msg-group.outgoing .k-bubble {
+      background: #fee500;
+      color: #111;
+      border-top-right-radius: 2px;
+    }
+    .msg-time {
+      font-size: 10px;
+      color: #6b7280;
+    }
+
+    /* ==========================================================
+       4. MESSAGES APP (iMessage)
+       ========================================================== */
+    .view-messages {
+      background: #000;
+      color: #fff;
+    }
+    .imsg-list {
+      flex: 1;
+      overflow-y: auto;
+    }
+    .imsg-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-bottom: 1px solid #1c1c1e;
+      cursor: pointer;
+    }
+    .imsg-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #2c2c2e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .imsg-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .imsg-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+    }
+    .imsg-preview {
+      font-size: 12px;
+      color: #8e8e93;
+      margin-top: 3px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* Message Thread Detail */
+    .view-imsg-chat {
+      background: #000;
+      color: #fff;
+      display: none;
+      flex-direction: column;
+    }
+    .imsg-messages-body {
+      flex: 1;
+      padding: 14px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .i-bubble {
+      padding: 9px 13px;
+      border-radius: 18px;
+      font-size: 13px;
+      line-height: 1.4;
+      max-width: 78%;
+    }
+    .i-bubble.incoming {
+      background: #262628;
+      color: #fff;
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+    .i-bubble.outgoing {
+      background: #007aff;
+      color: #fff;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+
+    /* ==========================================================
+       5. INSTAGRAM APP
+       ========================================================== */
+    .view-instagram {
+      background: #000;
+      color: #fff;
+    }
+    .insta-profile-header {
+      padding: 16px;
+      display: flex;
+      gap: 18px;
+      align-items: center;
+    }
+    .insta-pic {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      border: 2px solid #38bdf8;
+    }
+    .insta-stats {
+      flex: 1;
+      display: flex;
+      justify-content: space-around;
+      text-align: center;
+    }
+    .stat-num { font-size: 15px; font-weight: 700; color: #fff; }
+    .stat-label { font-size: 11px; color: #8e8e93; margin-top: 2px; }
+    .insta-bio {
+      padding: 0 16px 14px;
+      font-size: 12px;
+      line-height: 1.45;
+      color: #f1f5f9;
+      border-bottom: 1px solid #1f2937;
+    }
+    .insta-bio b { font-size: 13px; color: #fff; display: block; margin-bottom: 2px; }
+    .insta-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 12px 14px 20px;
+    }
+    .insta-post {
+      background: #111827;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #1f2937;
+    }
+    .post-img-holder {
+      height: 180px;
+      background: #1e293b;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #94a3b8;
+      font-size: 13px;
+      gap: 6px;
+      text-align: center;
+      padding: 10px;
+    }
+    .post-content {
+      padding: 12px;
+      font-size: 12px;
+      color: #e2e8f0;
+    }
+    .post-caption { margin-bottom: 8px; line-height: 1.4; }
+    .post-caption b { color: #fff; margin-right: 4px; }
+    .post-comments {
+      background: #0b1120;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      color: #94a3b8;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .comment-item b { color: #38bdf8; }
+    .comment-item.suspicious { color: #f87171; }
+
+    /* ==========================================================
+       6. NOTES APP (Secret Notes)
+       ========================================================== */
+    .view-notes {
+      background: #000;
+      color: #fff;
+    }
+    .notes-list {
+      flex: 1;
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .note-card {
+      background: #1c1c1e;
+      border-radius: 12px;
+      padding: 12px 14px;
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .note-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #ffd60a;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+    .note-date {
+      font-size: 11px;
+      color: #8e8e93;
+      margin-bottom: 4px;
+    }
+    .note-snippet {
+      font-size: 12px;
+      color: #aeaeb2;
+      line-height: 1.35;
+    }
+
+    /* Note Detail View */
+    .view-note-detail {
+      background: #000;
+      color: #fff;
+      display: none;
+      flex-direction: column;
+    }
+    .note-body {
+      padding: 16px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #e2e8f0;
+      white-space: pre-wrap;
+    }
+
+    /* ==========================================================
+       7. INCOMING CALL MODAL
+       ========================================================== */
+    .call-modal {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(10, 15, 25, 0.95);
+      backdrop-filter: blur(25px);
+      z-index: 200;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 60px 24px 40px;
+      animation: callPulse 2s infinite ease-in-out;
+    }
+    @keyframes callPulse {
+      0%, 100% { background: rgba(10, 15, 25, 0.95); }
+      50% { background: rgba(18, 25, 40, 0.98); }
+    }
+    .caller-info {
+      text-align: center;
+    }
+    .caller-label { font-size: 13px; color: #94a3b8; text-transform: uppercase; margin-bottom: 8px; }
+    .caller-name { font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .caller-sub { font-size: 14px; color: #ef4444; }
+    
+    .call-actions {
+      display: flex;
+      gap: 60px;
+      margin-bottom: 20px;
+    }
+    .call-btn {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      border: none;
+      cursor: pointer;
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    }
+    .call-btn.decline { background: #ef4444; }
+    .call-btn.accept { background: #22c55e; }
+
+    /* Floating call trigger button for user */
+    .secret-call-trigger {
+      position: absolute;
+      top: 52px;
+      right: 14px;
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+      font-size: 10px;
+      padding: 4px 8px;
+      border-radius: 12px;
+      cursor: pointer;
+      z-index: 102;
+    }
+  </style>
+</head>
+<body>
+
+<div class="iphone-frame">
+  <!-- Dynamic Island -->
+  <div class="dynamic-island">
+    <div class="island-camera"></div>
+    <div class="island-sensor"></div>
+  </div>
+
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <span id="clock-time">23:48</span>
+    <div style="display:flex; gap:5px; align-items:center;">
+      <svg width="14" height="10" viewBox="0 0 14 10" fill="currentColor"><path d="M1 8h2v2H1zM4 6h2v4H4zM7 4h2v6H7zM10 2h2v8h-2zM13 0h1v10h-1z"/></svg>
+      <span style="font-size:11px;">5G</span>
+      <svg width="20" height="10" viewBox="0 0 20 10" fill="currentColor"><rect x="1" y="1" width="16" height="8" rx="2" fill="none" stroke="currentColor" stroke-width="1.2"/><rect x="2.5" y="2.5" width="11" height="5" rx="1"/><path d="M18 3.5v3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+    </div>
+  </div>
+
+  <!-- Screen: 1. Lock Screen -->
+  <div class="screen-view view-lock active" id="view-lock">
+    <div class="lock-date">11월 12일 목요일</div>
+    <div class="lock-clock">23:48</div>
+
+    <div class="lock-notifications">
+      <div class="notif-card" onclick="openKakaoFromNotif('jiseon')">
+        <div class="notif-header">
+          <span class="notif-icon kakao">talk</span>
+          <span>카카오톡 · 지금</span>
+        </div>
+        <div class="notif-title">강지선</div>
+        <div class="notif-body">당신이 한 짓, 온 세상이 다 알게 될 거야. 절대 그냥 안 넘어가.</div>
+      </div>
+
+      <div class="notif-card" onclick="openMessagesFromNotif()">
+        <div class="notif-header">
+          <span class="notif-icon msg">💬</span>
+          <span>메시지 · 4분 전</span>
+        </div>
+        <div class="notif-title">이화영 형사</div>
+        <div class="notif-body">사건 관련 공식 진술 외 사적 연락은 삼가 주십시오.</div>
+      </div>
+
+      <div class="notif-card" onclick="openKakaoFromNotif('hospital')">
+        <div class="notif-header">
+          <span class="notif-icon hosp">🏥</span>
+          <span>상천대병원 심장외과 의국 · 15분 전</span>
+        </div>
+        <div class="notif-title">김과장님</div>
+        <div class="notif-body">민 교수, 내일 오전 컨퍼런스 전에 과장실로 잠깐 와요.</div>
+      </div>
+    </div>
+
+    <button class="unlock-btn" onclick="unlockPhone()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>
+      Face ID로 잠금 해제
+    </button>
+  </div>
+
+  <!-- Screen: 2. Home Screen -->
+  <div class="screen-view view-home" id="view-home">
+    <!-- Secret Incoming Call Trigger for fun -->
+    <button class="secret-call-trigger" onclick="triggerIncomingCall('hwayoung')">📞 전화 오게 하기</button>
+
+    <div class="widget-row">
+      <div class="home-widget">
+        <div class="widget-tag">Heart Rate</div>
+        <div class="widget-val">68 <span style="font-size:12px; font-weight:normal;">BPM</span></div>
+        <div class="widget-sub">안정 상태 · 2분 전</div>
+      </div>
+      <div class="home-widget">
+        <div class="widget-tag">Schedule</div>
+        <div class="widget-val" style="font-size:16px;">내일 08:30</div>
+        <div style="font-size:11px; color:#cbd5e1;">관상동맥 우회술 (CABG)</div>
+      </div>
+    </div>
+
+    <div class="app-grid">
+      <div class="app-item" onclick="openApp('kakaotalk')">
+        <div class="app-icon kakao">
+          <span>talk</span>
+          <span class="app-badge">4</span>
+        </div>
+        <span class="app-name">카카오톡</span>
+      </div>
+
+      <div class="app-item" onclick="openApp('messages')">
+        <div class="app-icon messages">
+          <span>💬</span>
+          <span class="app-badge">2</span>
+        </div>
+        <span class="app-name">메시지</span>
+      </div>
+
+      <div class="app-item" onclick="openApp('instagram')">
+        <div class="app-icon instagram">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="18" cy="6" r="1" fill="currentColor"/></svg>
+          <span class="app-badge">9+</span>
+        </div>
+        <span class="app-name">인스타그램</span>
+      </div>
+
+      <div class="app-item" onclick="openApp('notes')">
+        <div class="app-icon notes">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <span class="app-badge">1</span>
+        </div>
+        <span class="app-name">메모</span>
+      </div>
+    </div>
+
+    <!-- Dock -->
+    <div class="dock-container">
+      <div class="app-item" onclick="triggerIncomingCall('hwayoung')">
+        <div class="app-icon phone">📞</div>
+      </div>
+      <div class="app-item" onclick="openApp('messages')">
+        <div class="app-icon messages">💬</div>
+      </div>
+      <div class="app-item" onclick="openApp('kakaotalk')">
+        <div class="app-icon kakao" style="font-size:20px;">talk</div>
+      </div>
+      <div class="app-item" onclick="openApp('instagram')">
+        <div class="app-icon instagram" style="font-size:20px;">📷</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: 3. KakaoTalk Chat List -->
+  <div class="screen-view view-kakaotalk" id="view-kakaotalk">
+    <div class="app-header">
+      <span style="font-size:18px; font-weight:700;">채팅</span>
+      <button class="header-back" onclick="goHome()">✕ 닫기</button>
+    </div>
+    <div class="chat-list">
+      <div class="chat-row" onclick="openKakaoRoom('jiseon')">
+        <div class="chat-avatar">👩‍🏫</div>
+        <div class="chat-info">
+          <div class="chat-top-line">
+            <span class="chat-name">강지선</span>
+            <span class="chat-time">23:44</span>
+          </div>
+          <div class="chat-preview">당신이 한 짓, 온 세상이 다 알게 될 거야...</div>
+        </div>
+        <span class="chat-unread-badge">1</span>
+      </div>
+
+      <div class="chat-row" onclick="openKakaoRoom('hyunsoo')">
+        <div class="chat-avatar">👦</div>
+        <div class="chat-info">
+          <div class="chat-top-line">
+            <span class="chat-name">아들 현수 ❤️</span>
+            <span class="chat-time">21:18</span>
+          </div>
+          <div class="chat-preview">아빠... 오늘 학교에서 싸웠어. 애들이 아빠 욕해...</div>
+        </div>
+        <span class="chat-unread-badge">1</span>
+      </div>
+
+      <div class="chat-row" onclick="openKakaoRoom('lawyer')">
+        <div class="chat-avatar">⚖️</div>
+        <div class="chat-info">
+          <div class="chat-top-line">
+            <span class="chat-name">법무법인 해솔 박재형 변호사</span>
+            <span class="chat-time">19:30</span>
+          </div>
+          <div class="chat-preview">교수님, 시청자 게시판 폭로글 캡처 및 소장 초안...</div>
+        </div>
+      </div>
+
+      <div class="chat-row" onclick="openKakaoRoom('hospital')">
+        <div class="chat-avatar">🏥</div>
+        <div class="chat-info">
+          <div class="chat-top-line">
+            <span class="chat-name">상천대병원 심장외과 의국 (12)</span>
+            <span class="chat-time">18:05</span>
+          </div>
+          <div class="chat-preview">김과장: 민 교수 내일 8시 과장실로 잠깐 와요.</div>
+        </div>
+        <span class="chat-unread-badge">2</span>
+      </div>
+
+      <div class="chat-row" onclick="openKakaoRoom('coupang')">
+        <div class="chat-avatar">📦</div>
+        <div class="chat-info">
+          <div class="chat-top-line">
+            <span class="chat-name">쿠팡 로켓배송</span>
+            <span class="chat-time">11/07</span>
+          </div>
+          <div class="chat-preview">[배송완료] 블랙 니트릴 라텍스 장갑 (M, 100매)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KakaoTalk Chat Room View -->
+  <div class="screen-view view-kakao-chat" id="view-kakao-chat">
+    <div class="app-header">
+      <button class="header-back" onclick="openApp('kakaotalk')">〈 채팅</button>
+      <span id="kakao-room-title" style="font-weight:700;">강지선</span>
+      <span style="width:40px;"></span>
+    </div>
+    <div class="kakao-messages-body" id="kakao-msg-body">
+      <!-- injected via JS -->
+    </div>
+  </div>
+
+  <!-- Screen: 4. Messages (iMessage) -->
+  <div class="screen-view view-messages" id="view-messages">
+    <div class="app-header">
+      <span style="font-size:18px; font-weight:700;">메시지</span>
+      <button class="header-back" onclick="goHome()">✕ 닫기</button>
+    </div>
+    <div class="imsg-list">
+      <div class="imsg-row" onclick="openImsgRoom('hwayoung')">
+        <div class="imsg-avatar">🚔</div>
+        <div class="imsg-info">
+          <div class="imsg-name">
+            <span>이화영 형사</span>
+            <span style="font-size:11px; color:#8e8e93; font-weight:normal;">23:44</span>
+          </div>
+          <div class="imsg-preview">사건 관련 공식 진술 외 사적 연락은 삼가 주십시오.</div>
+        </div>
+      </div>
+
+      <div class="imsg-row" onclick="openImsgRoom('unknown')">
+        <div class="imsg-avatar">❓</div>
+        <div class="imsg-info">
+          <div class="imsg-name">
+            <span>발신번호 표시제한</span>
+            <span style="font-size:11px; color:#8e8e93; font-weight:normal;">어제</span>
+          </div>
+          <div class="imsg-preview">그날 밤 네가 한 짓 다 봤어. 네 거짓말이 언제까지 갈 것 같아?</div>
+        </div>
+      </div>
+
+      <div class="imsg-row" onclick="openImsgRoom('card')">
+        <div class="imsg-avatar">💳</div>
+        <div class="imsg-info">
+          <div class="imsg-name">
+            <span>현대카드 승인</span>
+            <span style="font-size:11px; color:#8e8e93; font-weight:normal;">11/07</span>
+          </div>
+          <div class="imsg-preview">[승인] 45,000원 심야온누리약국 일시불</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- iMessage Chat Detail View -->
+  <div class="screen-view view-imsg-chat" id="view-imsg-chat">
+    <div class="app-header">
+      <button class="header-back" onclick="openApp('messages')">〈 목록</button>
+      <span id="imsg-room-title" style="font-weight:700;">이화영 형사</span>
+      <span style="width:40px;"></span>
+    </div>
+    <div class="imsg-messages-body" id="imsg-msg-body">
+      <!-- injected via JS -->
+    </div>
+  </div>
+
+  <!-- Screen: 5. Instagram -->
+  <div class="screen-view view-instagram" id="view-instagram">
+    <div class="app-header">
+      <span style="font-weight:700;">dr.junho_min</span>
+      <button class="header-back" onclick="goHome()">✕ 닫기</button>
+    </div>
+    
+    <div class="insta-profile-header">
+      <div class="insta-pic">🩺</div>
+      <div class="insta-stats">
+        <div><div class="stat-num">18</div><div class="stat-label">게시물</div></div>
+        <div><div class="stat-num">24.8K</div><div class="stat-label">팔로워</div></div>
+        <div><div class="stat-num">89</div><div class="stat-label">팔로잉</div></div>
+      </div>
+    </div>
+
+    <div class="insta-bio">
+      <b>민준호 (Min Jun-ho, MD. Ph.D)</b>
+      상천대학교병원 심장외과 전문의 🩺 | 현수 아빠 👦<br>
+      <i>"심장은 결코 거짓말을 하지 않는다."</i>
+    </div>
+
+    <div class="insta-feed">
+      <!-- Post 1 -->
+      <div class="insta-post">
+        <div class="post-img-holder">
+          <div style="font-size:32px;">🫀</div>
+          <b>수술실 스크럽 착용 컷</b>
+          <span>(상천대병원 3번 심장외과 수술실)</span>
+        </div>
+        <div class="post-content">
+          <div class="post-caption">
+            <b>dr.junho_min</b> 9시간에 걸친 관상동맥 우회술 무사히 완료. 끝까지 버텨준 환자의 심장 박동을 느낄 때, 의사로서 가장 깊은 전율과 감사를 배웁니다.
+          </div>
+          <div class="post-comments">
+            <div class="comment-item"><b>nurse_soojin</b> 교수님 오늘 수술 고생 많으셨습니다! 🙏</div>
+            <div class="comment-item"><b>fan_min</b> 방송 토크쇼 보고 팬 됐어요.. 진짜 완벽한 의사 그 자체 ㅠㅠ</div>
+            <div class="comment-item suspicious"><b>truth_seeker_99</b> 방송 게시판 글 진짜인가요? 사실이면 소름인데 해명 좀 해주시죠.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Post 2 -->
+      <div class="insta-post">
+        <div class="post-img-holder" style="background:#283548;">
+          <div style="font-size:32px;">🍝</div>
+          <b>아들과의 주말 파스타</b>
+          <span>"현수가 좋아하는 오일 파스타"</span>
+        </div>
+        <div class="post-content">
+          <div class="post-caption">
+            <b>dr.junho_min</b> 주말만큼은 오롯이 아들의 전속 셰프로. 너의 웃는 얼굴 하나면 한 주의 피로가 다 녹아내린다. 사랑한다 현수야.
+          </div>
+          <div class="post-comments">
+            <div class="comment-item"><b>doc_lee</b> 민 교수님은 수술도 1등, 아빠로서도 1등이네요 대단합니다.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: 6. Notes (Secret Notes) -->
+  <div class="screen-view view-notes" id="view-notes">
+    <div class="app-header">
+      <span style="font-size:18px; font-weight:700;">메모</span>
+      <button class="header-back" onclick="goHome()">✕ 닫기</button>
+    </div>
+    <div class="notes-list">
+      <div class="note-card" onclick="openNoteDetail('hwayoung_secret')">
+        <div class="note-title">🔒 [비밀] 연희동 타겟 (이화영)</div>
+        <div class="note-date">2026. 11. 07.</div>
+        <div class="note-snippet">주소: 서대문구 연희로 14길 28-X (2층 단독주택) / 퇴근 시간: 보통 22:30~23:15...</div>
+      </div>
+
+      <div class="note-card" onclick="openNoteDetail('jiseon_defense')">
+        <div class="note-title">강지선 대응 및 반격 시나리오</div>
+        <div class="note-date">2026. 11. 05.</div>
+        <div class="note-snippet">1. 토크쇼 출연 시 철저히 '억울한 피해자' 프레임 유지할 것. 2. 현수의 트라우마를 강조...</div>
+      </div>
+
+      <div class="note-card" onclick="openNoteDetail('perfect_rules')">
+        <div class="note-title">완벽한 인간을 위한 행동 지침</div>
+        <div class="note-date">2026. 10. 15.</div>
+        <div class="note-snippet">1. 절대 감정을 드러내지 말 것. 2. 미소는 항상 눈꼬리를 먼저 휘어지게 할 것...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Note Detail View -->
+  <div class="screen-view view-note-detail" id="view-note-detail">
+    <div class="app-header">
+      <button class="header-back" onclick="openApp('notes')">〈 메모</button>
+      <span id="note-detail-title" style="font-weight:700;">비밀 메모</span>
+      <span style="width:40px;"></span>
+    </div>
+    <div class="note-body" id="note-detail-body">
+      <!-- injected via JS -->
+    </div>
+  </div>
+
+  <!-- Incoming Call Modal Overlay -->
+  <div class="call-modal" id="call-modal">
+    <div class="caller-info">
+      <div class="caller-label">수신 전화</div>
+      <div class="caller-name" id="caller-name">이화영 형사</div>
+      <div class="caller-sub" id="caller-sub">010-8492-5824</div>
+    </div>
+    
+    <div style="font-size:14px; color:#cbd5e1; text-align:center; padding:0 20px;" id="call-desc">
+      "민준호 교수님, 지금 댁 앞인데 잠깐 나오시죠."
+    </div>
+
+    <div class="call-actions">
+      <button class="call-btn decline" onclick="dismissCall()">✕</button>
+      <button class="call-btn accept" onclick="answerCall()">📞</button>
+    </div>
+  </div>
+
+  <!-- Home Indicator Bar -->
+  <div class="home-indicator-bar" onclick="goHome()"></div>
+</div>
+
+<script>
+  let s = (window.pickle && window.pickle.widget && window.pickle.widget.state) ? window.pickle.widget.state : {
+    currentApp: "lock",
+    metrics: {
+      apps_explored: 0,
+      secrets_unlocked: 0
+    }
+  };
+
+  function sendSignal(text) {
+    try {
+      if (window.pickle && window.pickle.widget && window.pickle.widget.signal) {
+        window.pickle.widget.signal(text);
+      }
+    } catch(e){}
+  }
+
+  async function saveState() {
+    try {
+      if (window.pickle && window.pickle.widget && window.pickle.widget.save) {
+        await window.pickle.widget.save(s);
+      }
+    } catch(e){}
+  }
+
+  function hideAllViews() {
+    document.querySelectorAll('.screen-view').forEach(el => el.classList.remove('active'));
+  }
+
+  function unlockPhone() {
+    hideAllViews();
+    document.getElementById('view-home').classList.add('active');
+    s.currentApp = "home";
+    s.metrics.apps_explored = Math.max(s.metrics.apps_explored, 1);
+    saveState();
+    sendSignal("사용자가 민준호의 잠금화면을 해제하고 홈 화면을 둘러보기 시작했습니다.");
+  }
+
+  function goHome() {
+    hideAllViews();
+    document.getElementById('view-home').classList.add('active');
+    s.currentApp = "home";
+    saveState();
+  }
+
+  function openApp(appName) {
+    hideAllViews();
+    const target = document.getElementById('view-' + appName);
+    if (target) {
+      target.classList.add('active');
+      s.currentApp = appName;
+      s.metrics.apps_explored += 1;
+      saveState();
+
+      if (appName === 'kakaotalk') {
+        sendSignal("사용자가 민준호의 카카오톡을 열었습니다.");
+      } else if (appName === 'messages') {
+        sendSignal("사용자가 민준호의 문자 메시지함을 열었습니다.");
+      } else if (appName === 'instagram') {
+        sendSignal("사용자가 민준호의 인스타그램 계정(@dr.junho_min)을 탐색 중입니다.");
+      } else if (appName === 'notes') {
+        sendSignal("사용자가 민준호의 은밀한 비밀 메모장을 열었습니다.");
+      }
+    }
+  }
+
+  function openKakaoFromNotif(room) {
+    unlockPhone();
+    openKakaoRoom(room);
+  }
+
+  function openMessagesFromNotif() {
+    unlockPhone();
+    openImsgRoom('hwayoung');
+  }
+
+  /* KakaoTalk Rooms */
+  const kakaoData = {
+    jiseon: {
+      title: "강지선",
+      messages: [
+        { type: "outgoing", time: "어제 22:15", text: "지선 씨, 우리 좋았잖아요. 왜 이제 와서 일을 이렇게까지 키워요?" },
+        { type: "incoming", time: "어제 22:18", text: "좋았다고요? 당신이 그날 내 와인에 무슨 짓을 했는지 내가 모를 줄 알아요?" },
+        { type: "outgoing", time: "어제 22:20", text: "지선 씨가 긴장해서 오해한 겁니다. 난 지선 씨를 진심으로 아끼고 좋아했어요." },
+        { type: "incoming", time: "어제 22:25", text: "거짓말쟁이... 의사 가운 뒤에 숨은 네 그 역겨운 진짜 얼굴, 내가 온 세상에 다 폭로할 거야." },
+        { type: "outgoing", time: "어제 22:30", text: "제발 그 말도 안 되는 거짓말 좀 멈춰요. 더 나가면 당신만 다쳐요." },
+        { type: "incoming", time: "23:44", text: "당신이 한 짓, 온 세상이 다 알게 될 거야. 절대 그냥 안 넘어가." }
+      ]
+    },
+    hyunsoo: {
+      title: "아들 현수 ❤️",
+      messages: [
+        { type: "incoming", time: "21:10", text: "아빠... 나 오늘 학교에서 영우랑 싸웠어." },
+        { type: "outgoing", time: "21:12", text: "현수야 다친 곳은 없어? 괜찮아?" },
+        { type: "incoming", time: "21:15", text: "애들이 아빠 성폭행범이냐고 놀려... 뉴스에 나온 거 진짜 아니지? 아빠 나쁜 사람 아니잖아..." },
+        { type: "outgoing", time: "21:18", text: "현수야, 아빠 믿지? 다 어른들의 오해고 거짓말이야. 아빠가 다 해결할 테니까 현수는 아무 걱정 하지 마. 집에서 기다려, 아빠 금방 갈게." }
+      ]
+    },
+    lawyer: {
+      title: "박재형 변호사 (해솔)",
+      messages: [
+        { type: "incoming", time: "18:20", text: "민 교수님, 방송 시청자 게시판 글 증거 채증 완료했습니다." },
+        { type: "incoming", time: "18:25", text: "정보통신망법상 허위사실적시 명예훼손 및 업무방해로 내일 즉시 고소장 접수하겠습니다." },
+        { type: "outgoing", time: "19:30", text: "감사합니다 박 변호사님. 상대측 과거 신경정신과 진료 내역도 확인 부탁드립니다." }
+      ]
+    },
+    hospital: {
+      title: "심장외과 의국 (12)",
+      messages: [
+        { type: "incoming", sender: "김과장", time: "17:40", text: "민 교수, 병원 홈페이지랑 게시판에 글 올라온 거 봤나? 이사장실에서 전화 왔어." },
+        { type: "incoming", sender: "김과장", time: "18:05", text: "내일 오전 컨퍼런스 전에 과장실로 잠깐 와요. VIP 환자 수술은 일단 보류하는 게 좋겠어." },
+        { type: "outgoing", time: "18:10", text: "네 과장님, 내일 아침에 찾아뵙고 소명 드리겠습니다." }
+      ]
+    },
+    coupang: {
+      title: "쿠팡 로켓배송",
+      messages: [
+        { type: "incoming", time: "11/07 14:10", text: "[로켓배송 완료] 주문하신 '블랙 니트릴 라텍스 장갑 (M 100매입)'이 현관 앞에 배송되었습니다." }
+      ]
+    }
+  };
+
+  function openKakaoRoom(roomId) {
+    hideAllViews();
+    const room = kakaoData[roomId];
+    if (!room) return;
+    document.getElementById('kakao-room-title').innerText = room.title;
+    const body = document.getElementById('kakao-msg-body');
+    body.innerHTML = '';
+    room.messages.forEach(m => {
+      const grp = document.createElement('div');
+      grp.className = 'msg-group ' + m.type;
+      if (m.sender) {
+        const s = document.createElement('div');
+        s.className = 'msg-sender';
+        s.innerText = m.sender;
+        grp.appendChild(s);
+      }
+      const wrap = document.createElement('div');
+      wrap.className = 'bubble-wrap';
+      const b = document.createElement('div');
+      b.className = 'k-bubble';
+      b.innerText = m.text;
+      const t = document.createElement('span');
+      t.className = 'msg-time';
+      t.innerText = m.time;
+      wrap.appendChild(b);
+      wrap.appendChild(t);
+      grp.appendChild(wrap);
+      body.appendChild(grp);
+    });
+    document.getElementById('view-kakao-chat').classList.add('active');
+    sendSignal("사용자가 카카오톡에서 '" + room.title + "' 대화방을 열었습니다.");
+  }
+
+  /* Messages (iMessage) */
+  const imsgData = {
+    hwayoung: {
+      title: "이화영 형사",
+      messages: [
+        { type: "outgoing", text: "이 형사님, 오늘 경찰서에서 뵀던 상천대병원 민준호입니다. 바쁘신데 친절히 응해주셔서 감사했습니다." },
+        { type: "incoming", text: "사건 관련 공식 진술 외 사적 연락은 삼가 주십시오." },
+        { type: "outgoing", text: "연희동 골목길이 밤에 많이 어둡고 인적이 드물더라고요. 늦은 시간 퇴근길 조심하세요." },
+        { type: "incoming", text: "당신 제 퇴근길과 주소를 어떻게 압니까?" }
+      ]
+    },
+    unknown: {
+      title: "발신번호 표시제한",
+      messages: [
+        { type: "incoming", text: "그날 밤 네가 한 짓 다 봤어. 네 거짓말이 언제까지 갈 것 같아?" },
+        { type: "incoming", text: "네 완벽한 가면이 벗겨지는 순간을 기대해." }
+      ]
+    },
+    card: {
+      title: "현대카드",
+      messages: [
+        { type: "incoming", text: "[Web발신]\n[현대카드 승인]\n11/07 23:42\n심야온누리약국 45,000원\n일시불 승인완료" },
+        { type: "incoming", text: "[Web발신]\n[현대카드 승인]\n11/07 23:10\n주유소 78,000원" }
+      ]
+    }
+  };
+
+  function openImsgRoom(id) {
+    hideAllViews();
+    const data = imsgData[id];
+    if (!data) return;
+    document.getElementById('imsg-room-title').innerText = data.title;
+    const body = document.getElementById('imsg-msg-body');
+    body.innerHTML = '';
+    data.messages.forEach(m => {
+      const b = document.createElement('div');
+      b.className = 'i-bubble ' + m.type;
+      b.innerText = m.text;
+      body.appendChild(b);
+    });
+    document.getElementById('view-imsg-chat').classList.add('active');
+    sendSignal("사용자가 문자 메시지에서 '" + data.title + "'와의 대화를 확인했습니다.");
+  }
+
+  /* Notes */
+  const notesData = {
+    hwayoung_secret: {
+      title: "🔒 [비밀] 연희동 타겟 (이화영)",
+      body: `[대상: 서대문경찰서 강력계 경위 이화영]
+
+- 거주지: 서울시 서대문구 연희로 14길 28-X (2층 단독주택)
+- 출퇴근 패턴:
+  * 서대문서 퇴근: 보통 22:15 ~ 22:45
+  * 연희동 집 도착: 22:30 ~ 23:15 사이
+- 도어락 비밀번호 추정:
+  * 키패드 지문 흔적: 1, 4, 7, 9
+  * 생일 또는 경찰 임용 연도 조합 유력 (9104, 1409 확인)
+- 침실 구조:
+  * 2층 안쪽 테라스 창문 걸쇠 유격 있음.
+  * 골목 가로등 불빛이 침대 헤드 쪽으로 비침.
+- 준비물:
+  * 블랙 라텍스 장갑 (지문 잔류 방지)
+  * 발자국 소음 방지 오버슈즈
+
+※ 경고: 절대 깨우지 말 것. 사진 촬영 후 조용히 철수.`
+    },
+    jiseon_defense: {
+      title: "강지선 대응 및 반격 시나리오",
+      body: `1. 방송 토크쇼 프레임:
+   - "선의로 도왔으나 왜곡된 사랑으로 집착당한 피해자" 포지션 고수.
+   - 여론은 이미 의사·미혼부 쪽으로 기울어 있음.
+
+2. 약점 공략:
+   - 강지선의 과거 우울증 치료 기록 및 휴직 이력 확보.
+   - 거짓말탐지기 검사 결과 '거짓' 판명 언론 유출 유도.
+
+3. 현수 활용:
+   - "엄마 없이 자란 아들에게 상처를 준 사람"으로 부각시켜 동정 여론 극대화.`
+    },
+    perfect_rules: {
+      title: "완벽한 인간을 위한 행동 지침",
+      body: `1. 절대 목소리를 높이지 않는다. 상대가 화낼수록 더 낮고 부드러운 톤 유지.
+2. 미소 지을 때는 눈꼬리를 먼저 휘어지게 만들어 진정성을 연출한다.
+3. 메스를 잡을 때의 냉정함을 일상에서도 잃지 않는다.
+4. 모든 인간은 통제 가능하다. 약점을 쥔 자가 신이다.`
+    }
+  };
+
+  function openNoteDetail(noteId) {
+    hideAllViews();
+    const n = notesData[noteId];
+    if (!n) return;
+    document.getElementById('note-detail-title').innerText = n.title;
+    document.getElementById('note-detail-body').innerText = n.body;
+    document.getElementById('view-note-detail').classList.add('active');
+    s.metrics.secrets_unlocked += 1;
+    saveState();
+    sendSignal("사용자가 민준호의 비밀 메모 '" + n.title + "'의 소름 돋는 내용을 읽었습니다.");
+  }
+
+  /* Incoming Call Events */
+  function triggerIncomingCall(caller) {
+    const modal = document.getElementById('call-modal');
+    if (caller === 'hwayoung') {
+      document.getElementById('caller-name').innerText = "이화영 형사";
+      document.getElementById('caller-sub').innerText = "010-8492-5824";
+      document.getElementById('call-desc').innerText = "“민준호 교수님, 지금 댁 앞인데 잠깐 나오시죠. 드릴 말씀이 있습니다.”";
+    } else {
+      document.getElementById('caller-name').innerText = "강지선";
+      document.getElementById('caller-sub').innerText = "010-3942-1192";
+      document.getElementById('call-desc').innerText = "“당신 지금 어디야? 네 가식 다 까발릴 거야...”";
+    }
+    modal.style.display = 'flex';
+    sendSignal("민준호에게 " + document.getElementById('caller-name').innerText + "의 전화가 걸려왔습니다!");
+  }
+
+  function dismissCall() {
+    document.getElementById('call-modal').style.display = 'none';
+    sendSignal("사용자가 걸려온 전화를 수신 거절했습니다.");
+  }
+
+  function answerCall() {
+    document.getElementById('call-desc').innerText = "통화 연결 중... [음성 연결: '민준호 교수님, 연희동 저희 집엔 왜 오셨습니까?']";
+    sendSignal("사용자가 전화를 받아 상대방의 추궁 음성을 들었습니다!");
+    setTimeout(() => {
+      document.getElementById('call-modal').style.display = 'none';
+    }, 2500);
+  }
+
+  /* Command handler from character agent */
+  if (window.pickle && window.pickle.widget) {
+    window.pickle.widget.oncommand = (command) => {
+      const [cmd, arg] = command.trim().split(/\s+/);
+      if (cmd === 'open_app') {
+        openApp(arg);
+      } else if (cmd === 'trigger_call') {
+        triggerIncomingCall(arg || 'hwayoung');
+      } else if (cmd === 'reset') {
+        hideAllViews();
+        document.getElementById('view-lock').classList.add('active');
+        s.currentApp = 'lock';
+        saveState();
+      }
+    };
+  }
+</script>
+
+</body>
+</html>
