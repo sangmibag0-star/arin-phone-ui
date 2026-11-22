@@ -749,7 +749,7 @@ label.f-label{display:block;font-size:10.5px;font-weight:800;color:#8B7C92;lette
       '</svg>';
   }
 
-  // 폰 주인(상미) 아바타
+  // 폰 주인(아린) 아바타
   function meAvatar(size) {
     const s = size || 38;
     return '<svg viewBox="0 0 100 100" width="' + s + '" height="' + s + '" preserveAspectRatio="xMidYMid slice" aria-hidden="true">' +
@@ -1099,14 +1099,14 @@ label.f-label{display:block;font-size:10.5px;font-weight:800;color:#8B7C92;lette
       { id: 'b14', from: 'actor', date: '2026-11-19', time: '오후 6:47', text: '힌트 하나만 드리면… 제가 처음 읽고 소름 돋았던 건 결말이 아니라 그 앞에 있는 대사 한 줄이었어요. 그 장면은 꼭 본방으로 보세요.' },
       { id: 'b15', from: 'fan', date: '2026-11-19', time: '오후 6:52', text: '그렇게 말하면 더 궁금하잖아요ㅠㅠ 오늘 저 잠 못 자요' },
       { id: 'b16', from: 'actor', date: '2026-11-19', time: '오후 6:55', text: '잠은 꼭 주무세요. 저는 대신 오늘 밤에 그 대사 연습 좀 더 해볼게요.' },
-      { id: 'b17', from: 'fan', date: '2026-11-19', time: '오후 11:40', text: '배우님 저 오늘 좀 힘들었어요... 할머니 챙기느라 하루가 다 갔네요' },
+      { id: 'b17', from: 'fan', date: '2026-11-19', time: '오후 11:40', text: '배우님 저 오늘 좀 힘들었어요... 일에 치여서 하루가 다 갔네요' },
       { id: 'b18', from: 'actor', date: '2026-11-19', time: '오후 11:52', text: '그 얘기 들으면 제가 큰 말을 못 하겠어요. 다만 @@@님이 쓰러지지 않는 게 제일 중요하다는 건 꼭 말하고 싶어요.' },
       { id: 'b19', from: 'actor', date: '2026-11-19', time: '오후 11:53', text: '오늘은 물 한 잔 더 드시고, 저한테 잘했다고 한 번 말해 주고 자요. 제가 대신 토닥여 드리는 걸로 할게요.' },
       { id: 'b20', from: 'fan', date: '2026-11-19', time: '오후 11:58', text: 'ㅠㅠ 감동이에요 진짜... 잘했다고 말할게요' },
       { id: 'b21', from: 'actor', date: '2026-11-20', time: '오후 12:20', text: '오늘 밤 7회예요. 부제가 몬스터. 저도 본방으로 볼 거고요 ㅎㅎ @@@님은 야식 뭐 드실 거예요?' },
       { id: 'b22', from: 'fan', date: '2026-11-20', time: '오후 12:31', text: '국물 떡볶이요!! 본방엔 떡볶이죠' },
       { id: 'b23', from: 'actor', date: '2026-11-20', time: '오후 12:34', text: '아 부럽다… 저는 오늘 촬영 있어서 참아야 해요. @@@님 대신 맛있게 드세요. 국물은 다 드시지 말고요 ㅋㅋ' }
-    ].map(function (m) { if (m.from === 'fan') { m.read = true; m.nick = '상미'; m.isMe = true; } return m; });
+    ].map(function (m) { if (m.from === 'fan') { m.read = true; m.nick = '아린'; m.isMe = true; } return m; });
 
     /* ---------- APP 02 팬 커뮤니티 게시물 ---------- */
     const communityPosts = [
@@ -1214,7 +1214,7 @@ label.f-label{display:block;font-size:10.5px;font-weight:800;color:#8B7C92;lette
     ];
 
     return {
-      version: 1,
+      version: 2,
       bubble: { msgs: bubbleMsgs },
       community: { sort: 'new', posts: communityPosts, nextId: 11 },
       x: {
@@ -1391,7 +1391,7 @@ label.f-label{display:block;font-size:10.5px;font-weight:800;color:#8B7C92;lette
         chats: [
           { id: 'g1', title: '오늘 주접 멘트 짜줘', minsAgo: 210, icon: '💌', messages: [
             { role: 'user', text: '오늘 주접 멘트 짜줘. 유연석 배우님한테 쓸 거야.' },
-            { role: 'ai', text: '좋아요, 상미님 취향(과하지 않게, 웃기면서 진심)에 맞춰 세 개 준비했어요.' },
+            { role: 'ai', text: '좋아요, 아린님 취향(과하지 않게, 웃기면서 진심)에 맞춰 세 개 준비했어요.' },
             { role: 'ai', text: '1. "3년째 보는데도 오늘 처음 본 것처럼 심장이 새로 생겨요. 이건 제 잘못이 아니라 배우님 책임입니다."\n2. "저 사람 얼굴은 공공재인데 왜 저만 갖고 싶죠? 이 문장은 오늘의 유일한 불만입니다."\n3. "오늘도 잘생기셨다는 말, 이제 제 업무 일지에 넣었어요. 매일 반복되는 일이라 규정상 기록해야 하거든요."' },
             { role: 'user', text: '3번 너무 좋아 ㅋㅋㅋ 저장해줘' },
             { role: 'ai', text: '저장했어요. ‘3번’은 가볍게 던지기 좋은 톤이고, 진심을 더 넣고 싶으면 "매일 반복되는 일" 뒤에 "그런데 오늘은 유난히 더"를 붙여 보세요.' }
@@ -1401,7 +1401,7 @@ label.f-label{display:block;font-size:10.5px;font-weight:800;color:#8B7C92;lette
             { role: 'ai', text: '팬레터는 잘 쓰는 것보다 오래 남는 게 중요해요. 세 문단 구조로 가면 편해요.' },
             { role: 'ai', text: '① 언제 처음 좋아하게 됐는지 — "〈라이어〉 1회 보고, 이 사람은 뭔가 다르다고 생각했어요."\n② 그때 이후로 달라진 내 일상 — "본방 날에는 9시 40분에 소파에 앉아 있어요. 제 하루의 기준이 생겼어요."\n③ 부담 없는 마무리 — "오래오래 좋은 작품으로 만나고 싶습니다. 늘 건강하세요."' },
             { role: 'user', text: '너무 뻔한 거 아니야?' },
-            { role: 'ai', text: '뻔한 게 아니라 정직한 거예요. 대신 한 줄만 상미님만 쓸 수 있는 걸 넣어 보세요. 예를 들어 "할머니 병원 갔다 온 날에도 7회 예고를 세 번 봤어요"처럼요. 그런 문장은 아무도 대신 쓸 수 없어요.' }
+            { role: 'ai', text: '뻔한 게 아니라 정직한 거예요. 대신 한 줄만 아린님만 쓸 수 있는 걸 넣어 보세요. 예를 들어 "바쁘고 정신없는 날에도 7회 예고를 세 번 봤어요"처럼요. 그런 문장은 아무도 대신 쓸 수 없어요.' }
           ] },
           { id: 'g3', title: '오늘 올라온 사진 너무 좋은데 감상 좀 해줘', minsAgo: 960, icon: '📷', messages: [
             { role: 'user', text: '인스타에 올라온 촬영장 사진 봤는데 너무 좋아. 감상 좀 적어줘.' },
@@ -1747,7 +1747,7 @@ label.f-label{display:block;font-size:10.5px;font-weight:800;color:#8B7C92;lette
       '<div class="home-scroll">' +
         '<div class="home-top">' +
           '<div><div class="home-hello">' + DAYS[new Date().getDay()] + ' ' + (new Date().getHours() < 12 ? '오전' : '오후') + ', 덕질 모드 ON</div>' +
-          '<h1 class="home-name">상미의 폰 <span class="hnspark">♡</span></h1></div>' +
+          '<h1 class="home-name">아린의 폰 <span class="hnspark">♡</span></h1></div>' +
           '<div class="profile-mini" data-act="openSettings">' + meAvatar(38) + '</div>' +
         '</div>' +
 
@@ -1887,7 +1887,7 @@ label.f-label{display:block;font-size:10.5px;font-weight:800;color:#8B7C92;lette
     return String(text).replace(/@@@/g, '@@@NICK@@@');
   }
   function nickText(text) {
-    return String(text).replace(/@@@/g, (state.bubble.nickname || '상미'));
+    return String(text).replace(/@@@/g, (state.bubble.nickname || '아린'));
   }
   function buildRounds(msgs) {
     const rounds = []; let cur = null;
@@ -1925,7 +1925,7 @@ label.f-label{display:block;font-size:10.5px;font-weight:800;color:#8B7C92;lette
         '<button class="' + (!artistMode ? 'on' : '') + '" data-act="bubbleView" data-view="fan">팬 시점</button>' +
         '<button class="' + (artistMode ? 'on' : '') + '" data-act="bubbleView" data-view="artist">아티스트 시점</button>' +
       '</div>' +
-      '<span class="bs-nick" data-act="bubbleNick">애칭 · ' + esc(state.bubble.nickname || '상미') + '</span>' +
+      '<span class="bs-nick" data-act="bubbleNick">애칭 · ' + esc(state.bubble.nickname || '아린') + '</span>' +
     '</div>';
 
     let body = '';
@@ -2058,7 +2058,7 @@ label.f-label{display:block;font-size:10.5px;font-weight:800;color:#8B7C92;lette
       '오늘 사진은 조명이 도와준 거예요. 사람은 늘 조명이 중요하답니다.',
       '칭찬은 감사히 받을게요. 대신 오늘 하루도 잘 보내는 걸로 갚겠습니다.'
     ] },
-    { k: ['힘들', '우울', '슬프', '아파', '피곤', '잠', '할머니', '스트레스', '지쳐'], v: [
+    { k: ['힘들', '우울', '슬프', '아파', '피곤', '잠', '불안', '스트레스', '지쳐'], v: [
       '@@@님, 그런 날은 잘 견디는 것만으로도 충분해요. 오늘은 물 한 잔 더 드세요.',
       '제가 큰 말은 못 해도, @@@님이 쓰러지지 않는 게 제일 중요하다는 건 말하고 싶어요.',
       '그 마음 다 이해한다고는 못 하겠지만, 오늘 하루 버틴 것만으로도 잘하신 거예요.',
@@ -2171,7 +2171,7 @@ label.f-label{display:block;font-size:10.5px;font-weight:800;color:#8B7C92;lette
   ACTIONS.bubbleNick = function () {
     openSheet('<h3>내 애칭 설정</h3>' +
       '<p>배우님 메시지의 <b>@@@</b> 자리에 이 이름이 들어가요. 실제 버블처럼 팬마다 다르게 보이는 이름이에요.</p>' +
-      '<input id="nickInput" class="compose-field" maxlength="8" value="' + esc(state.bubble.nickname || '상미') + '" placeholder="예: 상미" />' +
+      '<input id="nickInput" class="compose-field" maxlength="8" value="' + esc(state.bubble.nickname || '아린') + '" placeholder="예: 아린" />' +
       '<div style="display:flex;gap:8px;margin-top:12px">' +
         '<button class="btn block" data-act="closeSheet">취소</button>' +
         '<button class="btn primary block" data-act="saveNick">저장</button>' +
@@ -2211,7 +2211,7 @@ label.f-label{display:block;font-size:10.5px;font-weight:800;color:#8B7C92;lette
     const d = new Date();
     state.bubble.msgs.push({
       id: uid('b'), from: 'fan', date: todayISO(d), time: fmtShort(d),
-      text: text, nick: state.bubble.nickname || '상미', isMe: true, read: false, ts: Date.now()
+      text: text, nick: state.bubble.nickname || '아린', isMe: true, read: false, ts: Date.now()
     });
     state.bubble.used = (state.bubble.used || 0) + 1;
     ui.drafts.bubbleFan = '';
@@ -2392,7 +2392,7 @@ label.f-label{display:block;font-size:10.5px;font-weight:800;color:#8B7C92;lette
     if (!text) { toast('댓글을 입력해 주세요'); if (input) input.focus(); return; }
     const p = state.community.posts.find(function (x) { return x.id === id; });
     if (!p) return;
-    p.comments.push({ nick: state.bubble.nickname || '상미', text: text, ts: Date.now() });
+    p.comments.push({ nick: state.bubble.nickname || '아린', text: text, ts: Date.now() });
     ui.drafts['comment_' + id] = '';
     save(); render();
     toast('댓글을 등록했어요');
@@ -2417,7 +2417,7 @@ label.f-label{display:block;font-size:10.5px;font-weight:800;color:#8B7C92;lette
     const id = 'cp' + (state.community.nextId || 100);
     state.community.nextId = (state.community.nextId || 100) + 1;
     state.community.posts.push({
-      id: id, nick: state.bubble.nickname || '상미', tag: '주접', ts: Date.now(),
+      id: id, nick: state.bubble.nickname || '아린', tag: '주접', ts: Date.now(),
       likes: 0, liked: false, title: t, body: b, tags: ['#유연석', '#오늘도_유연석'], comments: []
     });
     state.community.sort = 'new';
@@ -2519,7 +2519,7 @@ label.f-label{display:block;font-size:10.5px;font-weight:800;color:#8B7C92;lette
     const text = (ta && ta.value || '').trim();
     if (!text) { toast('내용을 입력해 주세요'); return; }
     state.x.tweets.push({
-      id: uid('t'), nick: state.bubble.nickname || '상미', handle: '@sangmi7',
+      id: uid('t'), nick: state.bubble.nickname || '아린', handle: '@arin_yys',
       text: text, likes: 0, rt: 0, liked: false, rted: false, ts: Date.now()
     });
     save(); closeSheet(); render();
@@ -2672,7 +2672,7 @@ label.f-label{display:block;font-size:10.5px;font-weight:800;color:#8B7C92;lette
     const text = (i && i.value || '').trim();
     if (!text) { toast('댓글을 입력해 주세요'); if (i) i.focus(); return; }
     state.insta.comments[id] = state.insta.comments[id] || [];
-    state.insta.comments[id].push({ nick: state.bubble.nickname || '상미', text: text, ts: Date.now() });
+    state.insta.comments[id].push({ nick: state.bubble.nickname || '아린', text: text, ts: Date.now() });
     ui.drafts['ig_' + id] = '';
     save(); render();
     toast('댓글을 남겼어요');
@@ -3138,7 +3138,7 @@ label.f-label{display:block;font-size:10.5px;font-weight:800;color:#8B7C92;lette
       '</div>' +
       '<div class="view-body">' +
         '<div class="gpt-hero"><h1>무엇을 도와드릴까요?</h1>' +
-          '<p>주접 멘트부터 팬레터, 작품 분석까지.<br>상미님의 3년 차 덕질을 옆에서 도와드려요.</p></div>' +
+          '<p>주접 멘트부터 팬레터, 작품 분석까지.<br>아린님의 3년 차 덕질을 옆에서 도와드려요.</p></div>' +
         '<div class="gpt-list">' +
           state.gpt.chats.slice().sort(function (a, b) { return (b.ts || NOW - b.minsAgo * M) - (a.ts || NOW - a.minsAgo * M); }).map(function (c) {
             const last = c.messages[c.messages.length - 1];
@@ -3196,7 +3196,7 @@ label.f-label{display:block;font-size:10.5px;font-weight:800;color:#8B7C92;lette
       '오늘의 주접 세 줄, 바로 써 드릴게요.\n\n1. “3년을 봐도 매일 첫 만남인 척 내 심장을 새로 만드신다. 이건 통보입니다.”\n2. “이 얼굴은 공공재인데 왜 나만 갖고 싶죠. 오늘의 유일한 불만입니다.”\n3. “오늘도 잘생기셨다는 사실을 기록했습니다. 매일 반복되는 일이라 규정상 남겨야 하거든요.”\n\n제일 마음에 드는 걸 골라 주시면 톤을 더 다듬어 드릴게요.'
     ] },
     { k: ['팬레터', '편지', '써', '작성'], a: [
-      '팬레터는 세 문단이면 충분해요.\n\n① 처음 좋아하게 된 순간 — “〈라이어〉 1회를 보고 이 사람은 뭔가 다르다고 생각했어요.”\n② 달라진 일상 — “본방 날엔 9시 40분에 소파에 앉아 있어요. 제 하루에 기준이 생겼어요.”\n③ 부담 없는 마무리 — “오래오래 좋은 작품으로 만나고 싶습니다. 늘 건강하세요.”\n\n여기에 상미님만 쓸 수 있는 한 줄을 넣으면 훨씬 좋아요. 예: “할머니 병원 갔다 온 날에도 7회 예고를 세 번 봤어요.”'
+      '팬레터는 세 문단이면 충분해요.\n\n① 처음 좋아하게 된 순간 — “〈라이어〉 1회를 보고 이 사람은 뭔가 다르다고 생각했어요.”\n② 달라진 일상 — “본방 날엔 9시 40분에 소파에 앉아 있어요. 제 하루에 기준이 생겼어요.”\n③ 부담 없는 마무리 — “오래오래 좋은 작품으로 만나고 싶습니다. 늘 건강하세요.”\n\n여기에 아린님만 쓸 수 있는 한 줄을 넣으면 훨씬 좋아요. 예: “바쁘고 정신없는 날에도 7회 예고를 세 번 봤어요.”'
     ] },
     { k: ['사진', '감상', '셀카', '화보', '비주얼'], a: [
       '사진 감상은 세 가지로 보면 재미있어요.\n\n· 빛 — 창가 빛이 옆얼굴에만 걸려서 표정의 절반이 그림자에 남았어요.\n· 색 — 배경은 차가운데 얼굴만 따뜻해서 시선이 자연스럽게 얼굴로 갑니다.\n· 여백 — 위쪽을 비워 둔 게 촬영장의 공기를 느끼게 해요.\n\n한 문장으로: “빛이 사람 편인 사진이네요.”'
@@ -3213,7 +3213,7 @@ label.f-label{display:block;font-size:10.5px;font-weight:800;color:#8B7C92;lette
     { k: ['헤드윅', '뮤지컬', '무대', '노래', '티켓'], a: [
       '헤드윅은 무대 위 화려함과 그 아래의 슬픔이 같이 있는 작품이에요.\n\n티켓팅 준비라면:\n· 1층 통로석 — 객석 애드립이 가장 잘 보이는 자리.\n· 오픈 시간 10분 전 로그인, 결제수단 미리 등록.\n· 좌석 등급보다 “통로에서 몇 번째”를 먼저 보세요.\n\n공지가 뜨면 바로 확인해 드릴게요.'
     ] },
-    { k: ['힘들', '우울', '슬프', '지쳐', '스트레스', '할머니', '잠'], a: [
+    { k: ['힘들', '우울', '슬프', '지쳐', '스트레스', '불안', '잠'], a: [
       '오늘 많이 지치셨네요. 해결책을 먼저 말하기보다, 지금 상태를 인정하는 게 먼저인 것 같아요.\n\n· 오늘 할 일은 “물 한 잔, 이불 펴기” 정도로 줄여도 괜찮아요.\n· 내일의 나에게 메모 한 줄만 남겨 두세요. “오늘 버텼음.”\n· 덕질은 쉬는 데 쓰는 게 아니라 회복하는 데 쓰는 거예요. 7회는 내일 봐도 돼요.\n\n지금 잘하고 계세요. 정말로요.'
     ] },
     { k: ['라이어', '민준호', '지선', '드라마', '7회', '몬스터'], a: [
@@ -3238,7 +3238,7 @@ label.f-label{display:block;font-size:10.5px;font-weight:800;color:#8B7C92;lette
   ACTIONS.gptNew = function () {
     const id = uid('g');
     state.gpt.chats.unshift({ id: id, title: '새 대화', icon: '✨', ts: Date.now(), messages: [
-      { role: 'ai', text: '안녕하세요, 상미님. 오늘은 어떤 덕질 이야기를 해 볼까요?\n\n주접 멘트, 팬레터, 작품 분석, 티켓팅 준비까지 도와드릴게요.' }
+      { role: 'ai', text: '안녕하세요, 아린님. 오늘은 어떤 덕질 이야기를 해 볼까요?\n\n주접 멘트, 팬레터, 작품 분석, 티켓팅 준비까지 도와드릴게요.' }
     ] });
     save();
     go({ name: 'gptChat', id: id });
@@ -3284,7 +3284,7 @@ label.f-label{display:block;font-size:10.5px;font-weight:800;color:#8B7C92;lette
     openSheet('<h3>시뮬레이터 설정</h3>' +
       '<p>모든 화면은 가상이며, 실제 결제·전송·게시는 일어나지 않아요. 상태는 이 브라우저에만 저장됩니다.</p>' +
       '<div class="set-row"><div>자동 저장<small class="sr-sub">새로고침해도 메시지·좋아요·장바구니가 유지돼요</small></div><span class="mini-toggle on"></span></div>' +
-      '<div class="set-row"><div>내 애칭<small class="sr-sub">버블 @@@ 자리에 들어가는 이름</small></div><b style="color:#8A4C67">' + esc(state.bubble.nickname || '상미') + '</b></div>' +
+      '<div class="set-row"><div>내 애칭<small class="sr-sub">버블 @@@ 자리에 들어가는 이름</small></div><b style="color:#8A4C67">' + esc(state.bubble.nickname || '아린') + '</b></div>' +
       '<div class="set-row"><div>덕질 시작일<small class="sr-sub">D+' + ddayCount() + ' · 2023.11.15</small></div><small>3년 차</small></div>' +
       '<div class="set-row"><div>저장된 데이터<small class="sr-sub">메시지 ' + state.bubble.msgs.length + '개 · 게시물 ' + state.community.posts.length + '개 · 트윗 ' + state.x.tweets.length + '개</small></div><small>localStorage</small></div>' +
       '<div style="display:flex;flex-direction:column;gap:8px;margin-top:16px">' +
